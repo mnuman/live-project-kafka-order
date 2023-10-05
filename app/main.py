@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from fastapi.responses import RedirectResponse
 from datetime import datetime
 
 APP_NAME = "Orders"
@@ -18,3 +19,7 @@ async def root():
         "application": APP_NAME,
         "timestamp": datetime.now()
         }
+
+@app.get("/")
+async def redirect_typer():
+    return RedirectResponse("/health")
