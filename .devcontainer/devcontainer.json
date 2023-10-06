@@ -4,6 +4,11 @@
 	"name": "Python 3",
 	// Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
 	"image": "mcr.microsoft.com/devcontainers/python:1-3.11-bullseye",
+	// make sure develop env also connects to network for kafka components @ dev time
+	// https://github.com/microsoft/vscode-remote-release/issues/4272
+	"runArgs": [
+		"--network=live-project-kafka-go_kafkanetwork"
+	],
 	"customizations": {
 		"vscode": {
 			"extensions": [
