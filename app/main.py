@@ -14,9 +14,11 @@
         use the  command illustrated in Step 5 of the “Apache Kafka Quickstart” guide.
 """
 import os
-from fastapi import FastAPI
+from fastapi import FastAPI, Request, status
+from fastapi.responses import JSONResponse
 from fastapi.responses import RedirectResponse
 from datetime import datetime
+import publish
 
 _APP_NAME = os.environ["APP_NAME"]
 
@@ -45,3 +47,22 @@ async def root():
 async def redirect_typer():
     return RedirectResponse("/health")
 
+# TODO - add typing to perform validation for order object
+@app.post("/order", status_code=201)
+async def handle_order(request: Request):
+    try:
+        body = await request.json()
+        print(f"You sent in a request to {_APP_NAME}: ", body)
+        try:
+            publish.publish_event(json_msg=body)
+            return JSONResponse({'status': "OK", "message": "Order created"})
+        except Exception as e:
+            return JSONResponse(
+                {'status': "Error while publishing message", "message": str(e)},
+                status_code=status.HTTP_400_BAD_REQUEST
+            )
+    except Exception as e:
+        return JSONResponse(
+            {'status': "Error", "message": str(e)},
+            status_code=status.HTTP_400_BAD_REQUEST
+        )

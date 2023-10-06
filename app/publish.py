@@ -1,5 +1,6 @@
 import json
 import os
+import uuid
 from confluent_kafka import Producer
 
 _APP_NAME = os.environ["APP_NAME"]
@@ -24,5 +25,7 @@ app.publish.publish_event('42',payload)
 """
 
 
-def publish_event(key, json_msg):
+def publish_event(json_msg, key=None):
+    if key is None:
+        key = str(uuid.uuid1())
     _KAFKA_PRODUCER.produce(_TOPIC_NAME, key=key, value=json.dumps(json_msg))

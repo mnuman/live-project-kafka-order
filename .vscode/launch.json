@@ -16,6 +16,11 @@
                 "8080",
                 "--reload"
             ],
+            "env": {
+                "APP_NAME": "VS-Code debugging",
+                "KAFKA_TOPIC_NAME": "test",
+                "KAFKA_BOOTSTRAP_BROKERS": "broker:29092"
+            },
             "jinja": true,
             "justMyCode": false
         }
