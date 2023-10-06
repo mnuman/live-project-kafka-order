@@ -13,18 +13,12 @@
         operation. The easiest way to verify that an event exists in a topic is to
         use the  command illustrated in Step 5 of the “Apache Kafka Quickstart” guide.
 """
-import json
 import os
 from fastapi import FastAPI
 from fastapi.responses import RedirectResponse
 from datetime import datetime
-from confluent_kafka import Producer
 
-_APP_NAME = "Orders"
-_TOPIC_NAME = os.environ["KAFKA_TOPIC_NAME"]
-_KAFKA_BOOTSTRAP_BROKERS = os.environ["KAFKA_BOOTSTRAP_BROKERS"]
-_CONFIG = {'bootstrap.servers': _KAFKA_BOOTSTRAP_BROKERS, 'client.id': _APP_NAME}
-_KAFKA_PRODUCER = Producer(_CONFIG)
+_APP_NAME = os.environ["APP_NAME"]
 
 app = FastAPI(
     title="Order Microservice",
@@ -51,19 +45,3 @@ async def root():
 async def redirect_typer():
     return RedirectResponse("/health")
 
-"""
-Test from VS-Code: 
-  - ensure that the kafka broker has been start from the Confluent Platform image
-    (this exposes the network)
-  - start a terminal window from vscode
-  - start python and specify topic/broker as environment variables:
-    KAFKA_TOPIC_NAME=test KAFKA_BOOTSTRAP_BROKERS=broker:29092 python
-  - import this file and setup a payload. Publish, by executing the following
-    code block:
-
-import app.main
-payload={"aap":1,"noot":2}
-app.main.publish_event('42',payload)
-"""
-def publish_event(key, json_msg):
-    _KAFKA_PRODUCER.produce(_TOPIC_NAME, key=key, value=json.dumps(json_msg))
