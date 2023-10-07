@@ -2,6 +2,7 @@ import json
 import os
 import uuid
 from confluent_kafka import Producer
+from datetime import datetime
 
 _APP_NAME = os.environ["APP_NAME"]
 _TOPIC_NAME = os.environ["KAFKA_TOPIC_NAME"]
@@ -25,7 +26,20 @@ app.publish.publish_event('42',payload)
 """
 
 
-def publish_event(json_msg, key=None):
+def publish_event(event, key=None):
     if key is None:
         key = str(uuid.uuid1())
-    _KAFKA_PRODUCER.produce(_TOPIC_NAME, key=key, value=json.dumps(json_msg))
+    _KAFKA_PRODUCER.produce(_TOPIC_NAME, key=key, value=json.dumps(event))
+
+
+def msg_to_event(event_name: str, msg: dict):
+    return {
+        "EventBase": {
+            "EventID": str(uuid.uuid1()),
+            "EventName": event_name,
+            "EventTimestamp": datetime.now().isoformat()
+        },
+        "EventBody": msg
+    }
+
+    
