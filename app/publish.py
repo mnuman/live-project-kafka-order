@@ -7,7 +7,11 @@ from datetime import datetime
 _APP_NAME = os.environ["APP_NAME"]
 _TOPIC_NAME = os.environ["KAFKA_TOPIC_NAME"]
 _KAFKA_BOOTSTRAP_BROKERS = os.environ["KAFKA_BOOTSTRAP_BROKERS"]
-_CONFIG = {'bootstrap.servers': _KAFKA_BOOTSTRAP_BROKERS, 'client.id': _APP_NAME}
+_CONFIG = {
+    'bootstrap.servers': _KAFKA_BOOTSTRAP_BROKERS,
+    'client.id': _APP_NAME,
+    'enable.idempotence': True
+  }
 _KAFKA_PRODUCER = Producer(_CONFIG)
 
 """
